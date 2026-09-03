@@ -1,7 +1,9 @@
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.documents import router as documents_router
+from app.api.health import router as health_router
+from app.api.query import router as query_router
 
 app = FastAPI(
     title="Bangla Multilingual RAG API",
@@ -10,13 +12,8 @@ app = FastAPI(
 
 
 app.include_router(documents_router)
+app.include_router(query_router)
+app.include_router(health_router)
+app.mount("/", StaticFiles(directory="app/frontend", html=True), name="frontend")
 
 
-@app.get("/", include_in_schema=False)
-def root() -> RedirectResponse:
-    return RedirectResponse(url="/docs")
-
-
-@app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
