@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+.venv-*/
+venv/
+.env
+.DS_Store
+.pytest_cache/
+.ruff_cache/
+.vscode/
+
+# Runtime data
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Evaluation output
+eval/results/
