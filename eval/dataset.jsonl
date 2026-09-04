@@ -1,0 +1,16 @@
+{"question":"What is the capital of Bangladesh?","correct_chunk_index":0,"reference_answer":"Dhaka is the capital of Bangladesh.","support_keywords":["Dhaka"]}
+{"question":"বাংলাদেশের রাজধানী কী?","correct_chunk_index":0,"reference_answer":"ঢাকা বাংলাদেশের রাজধানী।","support_keywords":["ঢাকা"]}
+{"question":"What language does this project support?","correct_chunk_index":0,"reference_answer":"It supports Bangla and English.","support_keywords":["Bangla","English"]}
+{"question":"এই প্রকল্প কোন ভাষা সমর্থন করে?","correct_chunk_index":0,"reference_answer":"এটি বাংলা ও ইংরেজি সমর্থন করে।","support_keywords":["বাংলা"]}
+{"question":"What is the default chunk size?","correct_chunk_index":0,"reference_answer":"The default chunk size is 300 tokens.","support_keywords":["300"]}
+{"question":"ডিফল্ট chunk overlap কত?","correct_chunk_index":0,"reference_answer":"The default overlap is 50 tokens.","support_keywords":["50"]}
+{"question":"Which local service generates answers?","correct_chunk_index":0,"reference_answer":"Ollama generates the answers.","support_keywords":["Ollama"]}
+{"question":"কোন সার্ভিস উত্তর তৈরি করে?","correct_chunk_index":0,"reference_answer":"Ollama উত্তর তৈরি করে।","support_keywords":["Ollama"]}
+{"question":"Which API framework is used?","correct_chunk_index":0,"reference_answer":"The API uses FastAPI.","support_keywords":["FastAPI"]}
+{"question":"API কোন framework ব্যবহার করে?","correct_chunk_index":0,"reference_answer":"API FastAPI ব্যবহার করে।","support_keywords":["FastAPI"]}
+{"question":"What file formats can be uploaded?","correct_chunk_index":0,"reference_answer":"TXT and PDF files can be uploaded.","support_keywords":["TXT","PDF"]}
+{"question":"কোন ফাইল আপলোড করা যায়?","correct_chunk_index":0,"reference_answer":"TXT এবং PDF ফাইল আপলোড করা যায়।","support_keywords":["PDF"]}
+{"question":"Where are originals stored?","correct_chunk_index":0,"reference_answer":"Original files are stored in data/raw.","support_keywords":["data/raw"]}
+{"question":"মূল ফাইল কোথায় রাখা হয়?","correct_chunk_index":0,"reference_answer":"মূল ফাইল data/raw-এ রাখা হয়।","support_keywords":["data/raw"]}
+{"question":"What vector store is used initially?","correct_chunk_index":0,"reference_answer":"The initial vector store is in memory.","support_keywords":["memory"]}
+{"question":"প্রথমে কোন vector store ব্যবহার করা হয়?","correct_chunk_index":0,"reference_answer":"প্রাথমিকভাবে in-memory vector store ব্যবহার করা হয়।","support_keywords":["memory"]}

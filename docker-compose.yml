@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      RAG_OLLAMA_URL: http://ollama:11434
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - ollama
+    networks: [rag]
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    networks: [rag]
+
+volumes:
+  ollama_models:
+
+networks:
+  rag:

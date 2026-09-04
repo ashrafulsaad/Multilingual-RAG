@@ -2,11 +2,21 @@ from typing import Annotated
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
 
-from app.models.schemas import DocumentMetadata, DocumentUploadResponse
+from app.models.schemas import (
+    DocumentListResponse,
+    DocumentMetadata,
+    DocumentUploadResponse,
+)
 from app.services.document_service import DocumentProcessingError, DocumentService
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 document_service = DocumentService()
+documents: dict[str, DocumentMetadata] = {}
+
+
+@router.get("", response_model=DocumentListResponse)
+def list_documents() -> DocumentListResponse:
+    return DocumentListResponse(documents=list(documents.values()))
 
 
 @router.post("", response_model=DocumentUploadResponse, status_code=status.HTTP_201_CREATED)
@@ -28,8 +38,7 @@ async def upload_document(
     except DocumentProcessingError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    return DocumentUploadResponse(
-        document=DocumentMetadata(
+    metadata = DocumentMetadata(
             document_id=document.document_id,
             filename=document.filename,
             media_type=document.media_type,
@@ -38,4 +47,5 @@ async def upload_document(
             extracted_characters=len(document.text),
             stored_path=document.stored_path,
         )
-    )
+    documents[metadata.document_id] = metadata
+    return DocumentUploadResponse(document=metadata)

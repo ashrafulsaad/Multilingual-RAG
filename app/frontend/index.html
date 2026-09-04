@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dhara | Multilingual knowledge workspace</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand"><span class="brand-mark">ধ</span><span>dhara</span></div>
+        <p class="eyebrow">KNOWLEDGE WORKSPACE</p>
+        <nav class="nav"><a class="nav-item active" href="#workspace"><span>◈</span> Ask your library</a><a class="nav-item" href="#documents"><span>▦</span> Documents</a></nav>
+        <div class="sidebar-bottom"><div class="status-dot"><span></span> Local engine ready</div><p>Bangla + English retrieval<br />Powered by your documents</p></div>
+      </aside>
+      <main class="main" id="workspace">
+        <header class="topbar"><div><p class="eyebrow">YOUR PRIVATE RESEARCH DESK</p><h1>Ask anything in your library.</h1></div><div class="top-actions"><button class="icon-button" id="refreshButton" title="Refresh documents">↻</button><a class="quiet-link" href="/docs" target="_blank" rel="noreferrer">API reference ↗</a></div></header>
+        <section class="hero-grid">
+          <div class="ask-panel">
+            <div class="panel-heading"><span class="step">01</span><div><h2>Ask your documents</h2><p>Search across every indexed page in Bangla or English.</p></div></div>
+            <form id="queryForm"><label for="question">Your question</label><textarea id="question" placeholder="e.g. এই নথিতে মূল সিদ্ধান্ত কী?" required></textarea><div class="form-row"><label class="select-label" for="topK">Sources <select id="topK"><option value="3">3 chunks</option><option value="5">5 chunks</option><option value="10">10 chunks</option></select></label><button class="primary-button" type="submit"><span>Ask Dhara</span><span>→</span></button></div></form>
+            <div class="suggestions"><span>Try asking</span><button data-question="What are the key points in these documents?">Key points</button><button data-question="এই নথির সারসংক্ষেপ কী?">সারসংক্ষেপ</button><button data-question="What decisions were made?">Decisions</button></div>
+          </div>
+          <div class="insight-panel"><div class="orbital"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="core-glyph">ধ</span></div><p class="eyebrow">CONTEXT-FIRST AI</p><h2>Answers with a trail back to the source.</h2><p>Every response is grounded in the passages you upload. No black box, no wandering.</p></div>
+        </section>
+        <section class="answer-section" id="answerSection"><div class="section-label"><span class="step">02</span><span>Answer</span><span class="line"></span><span id="latencyLabel">Waiting for a question</span></div><div class="answer-empty" id="answerEmpty"><span class="empty-mark">✦</span><h2>Your answer will appear here.</h2><p>Upload a document, then ask a question to begin.</p></div><div class="answer-content hidden" id="answerContent"><div><div class="answer-copy" id="answerText"></div><div class="sources" id="sources"></div></div><div class="metrics" id="metrics"></div></div></section>
+        <section class="documents-section" id="documents"><div class="section-label"><span class="step">03</span><span>Your library</span><span class="line"></span><span id="documentCount">0 documents</span></div><div class="library-grid"><form class="upload-card" id="uploadForm"><input id="fileInput" type="file" accept=".txt,.pdf" hidden /><label for="fileInput" class="upload-drop"><span class="upload-icon">↑</span><strong>Drop a document here</strong><span>or browse TXT and PDF files</span></label><div class="upload-footer"><label>Language <select id="languageHint"><option value="">Auto-detect</option><option value="Bangla">Bangla</option><option value="English">English</option><option value="Mixed">Mixed</option></select></label><button class="secondary-button" type="submit">Index document</button></div><p class="file-name" id="fileName">No file selected</p></form><div class="document-list" id="documentList"><div class="list-empty">Your indexed documents will show up here.</div></div></div></section>
+        <div class="toast" id="toast" role="status"></div>
+      </main>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>
