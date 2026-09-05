@@ -4,7 +4,7 @@ This guide explains how to run the project locally, test each part manually, and
 
 ## 1. What Is Currently Local?
 
-The project files exist in this workspace. They are not currently connected to GitHub because no Git remote is configured. The workflow at `.github/workflows/ci.yml` is therefore not running anywhere yet.
+The project is connected to `https://github.com/ashrafulsaad/Multilingual-RAG`. The workflow at `.github/workflows/ci.yml` runs on pushes and pull requests targeting `main`.
 
 The workflow is a GitHub Actions recipe. After you push this project to a GitHub repository, GitHub will automatically run it for pushes and pull requests targeting `main`:
 
@@ -31,7 +31,7 @@ For real RAG queries, also install Docker or Ollama. A native Ollama installatio
 
 ```bash
 ollama serve
-ollama pull llama3.2:3b
+ollama pull qwen2.5:3b
 ```
 
 The configured defaults are:
@@ -42,9 +42,15 @@ The configured defaults are:
 | Chunk size | `300` words/tokens approximately |
 | Chunk overlap | `50` words/tokens approximately |
 | Ollama URL | `http://localhost:11434` |
-| Ollama model | `llama3.2:3b` |
+| Ollama model | `qwen2.5:3b` |
 
 The embedding model is downloaded by `sentence-transformers` on its first real use, so the first upload can be slow and requires internet access once.
+
+## 3.1 Create an account and sign in
+
+The workspace requires authentication before it loads private documents. Open the homepage and select **Need an account? Create one**, then use a username and password of at least eight characters. After registration, sign in. The browser stores the short-lived access token locally and sends it as a bearer token for document and query requests.
+
+This is intentionally a simple local auth system for the portfolio project. Set a strong `RAG_AUTH_SECRET` in production; never use the development default.
 
 ## 3. Start the API
 
@@ -89,10 +95,11 @@ Students can borrow up to five books for fourteen days.
 EOF
 ```
 
-Upload it:
+After signing in through the frontend, upload it from the workspace. For direct API testing, first set your token:
 
 ```bash
 curl -s -X POST http://localhost:8000/documents \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -F "file=@/tmp/english.txt" \
   -F "language_hint=English"
 ```
@@ -140,6 +147,7 @@ Once an upload succeeds, ask a question answered by its contents:
 
 ```bash
 curl -s -X POST http://localhost:8000/query \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"question":"When is the library open?","top_k":3}'
 ```
@@ -171,6 +179,7 @@ Try the same question in Bangla:
 
 ```bash
 curl -s -X POST http://localhost:8000/query \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"question":"বাংলাদেশের রাজধানী কী?","top_k":3}'
 ```
@@ -258,7 +267,7 @@ docker compose up --build
 In another terminal, pull the model into the persistent Ollama volume:
 
 ```bash
-docker compose exec ollama ollama pull llama3.2:3b
+docker compose exec ollama ollama pull qwen2.5:3b
 ```
 
 The API uses `http://ollama:11434` inside the Compose network. Use the same curl commands, targeting `http://localhost:8000`. Stop services with:

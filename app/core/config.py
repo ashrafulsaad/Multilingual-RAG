@@ -8,12 +8,15 @@ class Settings(BaseSettings):
 
     raw_dir: str = "data/raw"
     processed_dir: str = "data/processed"
+    database_path: str = "data/rag.db"
+    environment: str = "development"
     embedding_model: str = "paraphrase-multilingual-MiniLM-L12-v2"
     chunk_size: int = 300
     chunk_overlap: int = 50
     ollama_url: str = "http://localhost:11434"
-    ollama_model: str = "qwen3:8b"
+    ollama_model: str = "qwen2.5:3b"
     ollama_timeout_seconds: float = 120.0
+    auth_secret: str = "development-only-change-me"
 
 
 @lru_cache

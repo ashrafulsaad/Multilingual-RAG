@@ -1,8 +1,10 @@
 from time import perf_counter
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.container import llm_service, retrieval_service
+from app.core.dependencies import current_user
 from app.models.schemas import LatencyMetrics, QueryRequest, QueryResponse, SourceChunk
 from app.services.embedding_service import EmbeddingUnavailableError
 from app.services.llm_service import OllamaUnavailableError
@@ -11,13 +13,15 @@ router = APIRouter(prefix="/query", tags=["query"])
 
 
 @router.post("", response_model=QueryResponse)
-def query_documents(request: QueryRequest) -> QueryResponse:
+def query_documents(request: QueryRequest, user: Annotated[dict, Depends(current_user)]) -> QueryResponse:
     if not request.question.strip():
         raise HTTPException(status_code=422, detail="question must not be blank")
 
     started = perf_counter()
     retrieval_started = perf_counter()
     try:
+        retrieval_service.vector_store.owner_id = user["sub"]
+        retrieval_service.vector_store._load()
         sources = retrieval_service.retrieve(request.question, request.top_k)
     except EmbeddingUnavailableError as exc:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc

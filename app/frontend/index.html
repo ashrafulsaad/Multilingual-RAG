@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dhara | Multilingual knowledge workspace</title>
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/auth.css" />
   </head>
   <body>
+    <div class="auth-screen" id="authScreen"><div class="auth-card"><div class="brand"><span class="brand-mark">ধ</span><span>dhara</span></div><p class="eyebrow">PRIVATE KNOWLEDGE WORKSPACE</p><h1>Sign in to your library.</h1><p class="auth-copy">Your documents and answers stay scoped to your account.</p><form id="authForm"><label for="username">Username</label><input id="username" minlength="3" required placeholder="your-name" /><label for="password">Password</label><input id="password" type="password" minlength="8" required placeholder="8+ characters" /><button class="primary-button" type="submit"><span id="authAction">Sign in</span><span>→</span></button></form><button class="auth-switch" id="authSwitch" type="button">Need an account? Create one</button></div></div>
     <div class="shell">
       <aside class="sidebar">
         <div class="brand"><span class="brand-mark">ধ</span><span>dhara</span></div>
@@ -15,7 +17,7 @@
         <div class="sidebar-bottom"><div class="status-dot"><span></span> Local engine ready</div><p>Bangla + English retrieval<br />Powered by your documents</p></div>
       </aside>
       <main class="main" id="workspace">
-        <header class="topbar"><div><p class="eyebrow">YOUR PRIVATE RESEARCH DESK</p><h1>Ask anything in your library.</h1></div><div class="top-actions"><button class="icon-button" id="refreshButton" title="Refresh documents">↻</button><a class="quiet-link" href="/docs" target="_blank" rel="noreferrer">API reference ↗</a></div></header>
+        <header class="topbar"><div><p class="eyebrow">YOUR PRIVATE RESEARCH DESK</p><h1>Ask anything in your library.</h1></div><div class="top-actions"><button class="icon-button" id="refreshButton" title="Refresh documents">↻</button><button class="quiet-link logout-button" id="logoutButton" type="button">Sign out</button></div></header>
         <section class="hero-grid">
           <div class="ask-panel">
             <div class="panel-heading"><span class="step">01</span><div><h2>Ask your documents</h2><p>Search across every indexed page in Bangla or English.</p></div></div>

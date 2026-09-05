@@ -14,6 +14,7 @@ venv/
 # Runtime data
 data/raw/*
 data/processed/*
+data/*.db
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 

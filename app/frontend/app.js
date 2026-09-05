@@ -1,5 +1,17 @@
 const $ = (selector) => document.querySelector(selector);
-const state = { documents: [] };
+const state = { documents: [], register: false, token: localStorage.getItem("dhara_token") };
+
+async function apiFetch(url, options = {}) {
+  const headers = new Headers(options.headers || {});
+  if (state.token) headers.set("Authorization", `Bearer ${state.token}`);
+  const response = await fetch(url, { ...options, headers });
+  if (response.status === 401) {
+    localStorage.removeItem("dhara_token");
+    state.token = null;
+    location.reload();
+  }
+  return response;
+}
 
 function showToast(message) {
   const toast = $("#toast");
@@ -20,12 +32,36 @@ function renderDocuments() {
 
 async function loadDocuments() {
   try {
-    const response = await fetch("/documents");
+    const response = await apiFetch("/documents");
     if (!response.ok) throw new Error("Could not load documents");
     state.documents = (await response.json()).documents;
     renderDocuments();
   } catch (error) { showToast(error.message); }
 }
+
+function setAuthenticated(token) {
+  state.token = token;
+  localStorage.setItem("dhara_token", token);
+  $("#authScreen").classList.add("hidden");
+  loadDocuments();
+}
+
+$("#authForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const endpoint = state.register ? "/auth/register" : "/auth/login";
+  const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: $("#username").value, password: $("#password").value }) });
+  const payload = await response.json();
+  if (!response.ok) return showToast(payload.detail || "Authentication failed");
+  if (state.register) {
+    state.register = false;
+    $("#authAction").textContent = "Sign in";
+    $("#authSwitch").textContent = "Need an account? Create one";
+    return showToast("Account created. Sign in to continue");
+  }
+  setAuthenticated(payload.access_token);
+});
+$("#authSwitch").addEventListener("click", () => { state.register = !state.register; $("#authAction").textContent = state.register ? "Create account" : "Sign in"; $("#authSwitch").textContent = state.register ? "Already have an account? Sign in" : "Need an account? Create one"; });
+$("#logoutButton").addEventListener("click", () => { localStorage.removeItem("dhara_token"); location.reload(); });
 
 $("#fileInput").addEventListener("change", (event) => {
   $("#fileName").textContent = event.target.files[0]?.name || "No file selected";
@@ -42,7 +78,7 @@ $("#uploadForm").addEventListener("submit", async (event) => {
   button.disabled = true;
   button.textContent = "Indexing...";
   try {
-    const response = await fetch("/documents", { method: "POST", body: form });
+    const response = await apiFetch("/documents", { method: "POST", body: form });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.detail || "Upload failed");
     showToast(`${payload.document.filename} added to your library`);
@@ -62,7 +98,7 @@ $("#queryForm").addEventListener("submit", async (event) => {
   button.disabled = true;
   button.innerHTML = "Thinking...";
   try {
-    const response = await fetch("/query", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, top_k: Number($("#topK").value) }) });
+    const response = await apiFetch("/query", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, top_k: Number($("#topK").value) }) });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.detail || "Query failed");
     $("#answerEmpty").classList.add("hidden");
@@ -79,4 +115,4 @@ $("#queryForm").addEventListener("submit", async (event) => {
 
 document.querySelectorAll("[data-question]").forEach((button) => button.addEventListener("click", () => { $("#question").value = button.dataset.question; $("#question").focus(); }));
 $("#refreshButton").addEventListener("click", loadDocuments);
-loadDocuments();
+if (state.token) { $("#authScreen").classList.add("hidden"); loadDocuments(); }

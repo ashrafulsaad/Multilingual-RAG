@@ -24,7 +24,7 @@ Install Ollama from https://ollama.com/download, then pull a model:
 
 ```bash
 ollama serve
-ollama pull llama3.2:3b
+ollama pull qwen2.5:3b
 ```
 
 Start the API:
@@ -43,21 +43,35 @@ Health:
 curl http://localhost:8000/health
 ```
 
-Upload:
+Register and sign in from the frontend at `http://localhost:8000/`, or obtain a token with the API:
 
 ```bash
-curl -F "file=@document.txt" -F "language_hint=mixed" http://localhost:8000/documents
+curl -X POST http://localhost:8000/auth/register \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"demo_user","password":"password123"}'
+
+curl -X POST http://localhost:8000/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"demo_user","password":"password123"}'
+```
+
+Use the returned access token for protected operations:
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "file=@document.txt" -F "language_hint=mixed" http://localhost:8000/documents
 ```
 
 Query:
 
 ```bash
 curl -X POST http://localhost:8000/query \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"question":"What does the document say?","top_k":3}'
 ```
 
-The query response contains `answer`, ranked `sources`, and retrieval, generation, and total latency in milliseconds. Unsupported files and invalid requests return `422`; no indexed documents return `404`; unavailable Ollama returns `503`.
+The query response contains `answer`, ranked `sources`, and retrieval, generation, and total latency in milliseconds. Protected routes return `401` without a valid token. Unsupported files and invalid requests return `422`; no indexed documents return `404`; unavailable Ollama or embeddings return `503`.
 
 ## Tests and evaluation
 
@@ -78,4 +92,4 @@ docker compose up --build
 docker compose exec ollama ollama pull llama3.2:3b
 ```
 
-The API and Ollama share a private network, and Ollama models persist in the `ollama_models` volume.
+The API and Ollama share a private network, and Ollama models persist in the `ollama_models` volume. Set `RAG_AUTH_SECRET` to a strong value before production deployment.
